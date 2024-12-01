@@ -8,9 +8,10 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+      fontFamily: {
+        base: [
+          "'Noto Sans JP Variable', -apple-system, BlinkMacSystemFont, sans-serif",
+        ],
       },
     },
   },
