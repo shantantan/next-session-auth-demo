@@ -3,44 +3,37 @@
 import { useActionState, useEffect, useState } from "react";
 import { registerAction } from "@/lib/auth";
 
+const fieldNames = ["name", "email", "password"];
+const initialErrors: Record<string, string> = {
+  form: "",
+  ...fieldNames.reduce((acc: Record<string, string>, crr: string) => {
+    acc[crr] = "";
+    return acc;
+  }, {}),
+};
+
 export const useRegisterForm = () => {
   const [state, action, isPending] = useActionState(registerAction, undefined);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [formError, setFormError] = useState("");
-  const [fieldErrors, setFieldErrors] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [formErrors, setFormErrors] = useState(initialErrors);
 
   useEffect(() => {
-    setFormError("");
-    setFieldErrors({ name: "", email: "", password: "" });
+    setFormErrors(initialErrors);
 
     if (!state) {
       return;
     }
 
-    if (state.form) {
-      const message = state.form;
-      setFormError(message);
-    }
+    type Key = keyof typeof state;
+    const keys: Key[] = Object.keys(initialErrors) as Key[];
 
-    if (state.name) {
-      const message = state.name[0];
-      setFieldErrors((prev) => ({ ...prev, name: message }));
-    }
-
-    if (state.email) {
-      const message = state.email[0];
-      setFieldErrors((prev) => ({ ...prev, email: message }));
-    }
-
-    if (state.password) {
-      const message = state.password[0];
-      setFieldErrors((prev) => ({ ...prev, password: message }));
+    for (const key of keys) {
+      if (state[key]) {
+        const message = key === "form" ? state[key] : state[key][0];
+        setFormErrors((prev) => ({ ...prev, [key]: message }));
+      }
     }
   }, [state]);
 
@@ -53,7 +46,6 @@ export const useRegisterForm = () => {
     password,
     setPassword,
     isPending,
-    formError,
-    fieldErrors,
+    formErrors,
   };
 };

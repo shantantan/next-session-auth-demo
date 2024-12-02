@@ -29,6 +29,7 @@ export const registerAction = async (
 
   try {
     const { name, email, password } = validatedFields.data;
+
     const hashedPassword = await bcrypt.hash(password, 8);
 
     await prisma.user.create({
