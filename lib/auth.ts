@@ -91,7 +91,7 @@ export const loginAction = async (prevState: unknown, formData: FormData) => {
       throw new Error();
     }
 
-    await setSession({ name: user.name, email: user.email });
+    await setSession({ id: user.id, name: user.name, email: user.email });
   } catch (error) {
     console.error(`Error login action: ${error}`);
     return {
